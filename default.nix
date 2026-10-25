@@ -30,16 +30,17 @@ in
       inherit kernelPackage;
       kernelParams = mkDefault [ "mem_sleep_default=deep" ];
     };
+    hardware = {
+      enableRedistributableFirmware = mkDefault true;
+      sensor.iio.enable = mkDefault true;
+      blacklistedKernelModules = optionals (!config.hardware.enableRedistributableFirmware) [
+        "ath3k"
+      ];
+      cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    };
+    services.fstrim.enable = lib.mkDefault true;
+    services.iptsd.enable = lib.mkDefault true;
+    environment.systemPackages = [ pkgs.surface-control ];
+
   };
-  hardware = {
-    enableRedistributableFirmware = mkDefault true;
-    sensor.iio.enable = mkDefault true;
-    blacklistedKernelModules = optionals (!config.hardware.enableRedistributableFirmware) [
-      "ath3k"
-    ];
-    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  };
-  services.fstrim.enable = lib.mkDefault true;
-  services.iptsd.enable = lib.mkDefault true;
-  environment.systemPackages = [ pkgs.surface-control ];
 }
