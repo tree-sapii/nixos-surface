@@ -14,19 +14,21 @@
       let
 
         kernelVersions = import ./kernels.nix;
-        inherit (pkgs.callPackage ./common.nix) buildSurfaceKernel patches;
-        kernels = pkgs.lib.mapAttrs (
-          _: v:
-          buildSurfaceKernel {
+        inherit (pkgs.callPackage ./common.nix { }) buildSurfaceKernel patches;
+        kernels = pkgs.lib.mapAttrs' (n: v: {
+          name = pkgs.lib.replaceStrings [ "." ] [ "_" ] n;
+          value = buildSurfaceKernel {
             inherit (v) version sha256;
             inherit patches;
-          }
+          };
+        }
+
         ) kernelVersions;
 
       in
       kernels
       // {
-        default = inputs.self.packages.${system}."6.18";
+        default = inputs.self.packages.${system}."6_18";
       }
     ) inputs.nixpkgs.legacyPackages;
   };
