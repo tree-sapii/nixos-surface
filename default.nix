@@ -12,7 +12,7 @@ let # this is to be transfered to default.nix and options.nix to be removed
     optionals
     ;
   kernelVersions = import ./kernels.nix;
-  inherit (pkgs.callPackage ./common.nix) buildSurfaceKernel patches;
+  inherit (pkgs.callPackage ./common.nix { }) buildSurfaceKernel patches;
   chosenKernel = kernelVersions.${config.hardware.nixos-surface.version};
   kernelPackage = buildSurfaceKernel {
     inherit (chosenKernel) version sha256;
