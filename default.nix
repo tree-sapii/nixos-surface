@@ -5,7 +5,12 @@
   ...
 }:
 let # this is to be transfered to default.nix and options.nix to be removed
-  inherit (lib) mkDefault mkOption types;
+  inherit (lib)
+    mkDefault
+    mkOption
+    types
+    optionals
+    ;
   kernelVersions = import ./kernels.nix;
   inherit (pkgs.callPackage ./common.nix) buildSurfaceKernel patches;
   chosenKernel = kernelVersions.${config.hardware.nixos-surface.version};
@@ -29,5 +34,10 @@ in
   hardware = {
     enableRedistributableFirmware = mkDefault true;
     sensor.iio.enable = mkDefault true;
+    blacklistedKernelModules = optionals (!config.hardware.enableRedistributableFirmware) [
+      "ath3k"
+    ];
+    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };
+  services.fstrim.enable = lib.mkDefault true;
 }
