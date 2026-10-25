@@ -17,10 +17,12 @@
         inherit (pkgs.callPackage ./common.nix { }) buildSurfaceKernel patches;
         kernels = pkgs.lib.mapAttrs' (n: v: {
           name = pkgs.lib.replaceStrings [ "." ] [ "_" ] n;
-          value = buildSurfaceKernel {
-            inherit (v) version sha256;
-            inherit patches;
-          };
+          value = (
+            buildSurfaceKernel {
+              inherit (v) version sha256;
+              inherit patches;
+            }
+          );
         }
 
         ) kernelVersions;
@@ -28,7 +30,7 @@
       in
       kernels
       // {
-        default = inputs.self.packages.${system}."6_18";
+        default = inputs.self.packages.${system}."6_6";
       }
     ) inputs.nixpkgs.legacyPackages;
   };

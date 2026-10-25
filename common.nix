@@ -25,11 +25,15 @@
         url = "mirror://kernel/linux/kernel/v${lib.versions.major version}.x/linux-${version}.tar.xz";
         inherit sha256;
       };
-      configfile = "${patches}/configs/${version}";
-      kernelPatches = lib.mapAttrsToList (name: _: {
-        inherit name;
-        patch = "${patches}/patches/${version}/${name}";
-      }) (builtins.readDir "${patches}/patches/${version}");
+      configfile = "${patches}/configs/${lib.versions.majorMinor version}";
+      kernelPatches =
+        lib.mapAttrsToList
+          (name: _: {
+            inherit name;
+            patch = "${patches}/patches/${lib.versions.majorMinor version}/${name}";
+          })
+          # the BASE file doesn't do anything and breaks the build during patchPhase
+          (removeAttrs (builtins.readDir "${patches}/patches/${lib.versions.majorMinor version}") [ "BASE" ]);
       modDirVersion = lib.versions.pad 3 version;
     });
 
