@@ -29,13 +29,13 @@ in
     boot = {
       inherit kernelPackages;
       kernelParams = mkDefault [ "mem_sleep_default=deep" ];
+      blacklistedKernelModules = optionals (!config.hardware.enableRedistributableFirmware) [
+        "ath3k"
+      ];
     };
     hardware = {
       enableRedistributableFirmware = mkDefault true;
       sensor.iio.enable = mkDefault true;
-      blacklistedKernelModules = optionals (!config.hardware.enableRedistributableFirmware) [
-        "ath3k"
-      ];
       cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     };
     services.fstrim.enable = lib.mkDefault true;
