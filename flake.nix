@@ -7,7 +7,7 @@
 
   outputs = inputs: {
     nixosModules = {
-      default = import ./default.nix;
+      default = import ./.;
     };
     packages = builtins.mapAttrs (
       system: pkgs:

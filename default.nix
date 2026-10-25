@@ -40,4 +40,6 @@ in
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };
   services.fstrim.enable = lib.mkDefault true;
+  services.iptsd.enable = lib.mkDefault true;
+  environment.systemPackages = [ pkgs.surface-control ];
 }
