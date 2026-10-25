@@ -7,7 +7,7 @@
 
   outputs = inputs: {
     nixosModules = {
-      linux-surface = import ./default.nix;
+      default = import ./default.nix;
     };
     packages = builtins.mapAttrs (
       system: pkgs:
