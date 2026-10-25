@@ -14,7 +14,7 @@ let # this is to be transfered to default.nix and options.nix to be removed
   kernelVersions = import ./kernels.nix;
   inherit (pkgs.callPackage ./common.nix { }) buildSurfaceKernel patches;
   chosenKernel = kernelVersions.${config.hardware.nixos-surface.version};
-  kernelPackage = buildSurfaceKernel {
+  kernelPackages = buildSurfaceKernel {
     inherit (chosenKernel) version sha256;
     inherit patches;
   };
@@ -27,7 +27,7 @@ in
   };
   config = {
     boot = {
-      inherit kernelPackage;
+      inherit kernelPackages;
       kernelParams = mkDefault [ "mem_sleep_default=deep" ];
     };
     hardware = {
