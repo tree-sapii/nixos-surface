@@ -30,8 +30,28 @@
       in
       kernels
       // {
-        default = inputs.self.packages.${system}."6_6";
+        default = inputs.self.packages.${system}."6_12";
+        build-and-push = pkgs.writeShellApplication {
+          name = "build-and-push";
+          runtimeInputs = [
+            pkgs.nix
+            pkgs.cachix
+          ];
+          text = "nix build ${
+            builtins.concatStringsSep " " (
+              map (v: ".#${pkgs.lib.replaceStrings [ "." ] [ "_" ] v}.kernel") (
+                pkgs.lib.attrNames (import ./kernels.nix)
+              )
+            )
+          } --no-link --print-out-paths | cachix push nixos-on-surface ";
+        };
       }
     ) inputs.nixpkgs.legacyPackages;
+    apps = builtins.mapAttrs (system: pkgs: {
+      default = {
+        type = "app";
+        program = pkgs.lib.getExe inputs.self.packages.${system}.build-and-push;
+      };
+    }) inputs.nixpkgs.legacyPackages;
   };
 }

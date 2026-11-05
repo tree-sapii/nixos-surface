@@ -10,8 +10,8 @@
   patches = fetchFromGitHub {
     owner = "linux-surface";
     repo = "linux-surface";
-    rev = "master"; # change this to an actaull tagged release ( can be recent )
-    hash = "sha256-oAgs2x4eJtdEehX4mQSgsEbGC71DvETQZy2VwOj0oTU=";
+    rev = "668a0208b4a713641f7f04a73631008b1f522257"; # change this to an actaull tagged release ( can be recent )
+    hash = "sha256-RnlQMpIPTE+QbFlMMwq5Qj95tlVkyRkR8WqaPlivMXM=";
   };
   buildSurfaceKernel =
     {
